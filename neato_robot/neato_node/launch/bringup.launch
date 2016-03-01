@@ -1,0 +1,16 @@
+<launch>
+  <arg name="use_sim_time" value="false"/>
+  <arg name="host"/>
+  <arg name="receive_port" default="5000"/>
+
+  <include file="$(find neato_node)/launch/bringup_minimal.launch">
+	<arg name="host" value="$(arg host)"/>
+  </include>
+  <include file="$(find gscam)/examples/raspi_nodelet_udp.launch">
+	 <arg name="host" value="$(arg host)"/>
+     <arg name="receive_port" value="$(arg receive_port)"/>
+  </include>
+<!-- <node name="jpg_stream" pkg="neato_node" type="jpg_stream">
+    <param name="host" value="$(arg host)"/>
+  </node> -->
+</launch>
