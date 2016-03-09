@@ -51,11 +51,11 @@ def main():
     """)
 
     status = os.system("git clone {0}".format(urlrobotica))
-    status = os.system("cd robotica16")
+    os.chdir("robotica16")
     print(status)
     print("Configurando o repositorio do curso como upstream")
     status = os.system("git remote add upstream https://github.com/mirwox/robotica16")
-    status = os.system("cd ../..")
+    os.chdir("../..")
     print("Para atualizar com o repositório do curso, lembre-se de fazer:\n git fetch upstream")
     status = os.system("catkin_make")
 
