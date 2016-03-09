@@ -17,10 +17,10 @@ import os
 
 
 def main():
-    user = raw_input("Por favor digite seu username do Github:")
+    user = raw_input("Por favor digite seu username do Github: ")
     user = user.strip()
 
-    email = raw_input("Por favor digite o e-mail de sua conta do Github")
+    email = raw_input("Por favor digite o e-mail de sua conta do Github ")
     email = email.strip()
 
     urlgit = "https://github.com/{0}".format(user)
