@@ -42,6 +42,7 @@ def main():
     print("Configurando o repositorio do curso como upstream")
     status = os.system("git remote add upstream https://github.com/mirwox/robotica16")
     status = os.system("cd ../..")
+    print("Para atualizar com o repositório do curso, lembre-se de fazer:\n git fetch upstream")
     status = os.system("catkin_make")
 
 
