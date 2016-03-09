@@ -41,9 +41,7 @@ def main():
     status = os.system("cd robotica16")
     print("Configurando o repositorio do curso como upstream")
     status = os.system("git remote add upstream https://github.com/mirwox/robotica16")
-    status = os.system("cd ..")
-    status = os.system("git clone https://github.com/ros-teleop/teleop_twist_keyboard.git")
-    status = os.system("cd..")
+    status = os.system("cd ../..")
     status = os.system("catkin_make")
 
 
