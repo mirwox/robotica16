@@ -2,6 +2,19 @@
 from __future__ import print_function
 import httplib
 import requests
+import os
+
+
+"""
+    Este script Python configura o diretório Git de um aluno
+    do curso de robótica e em seguida faz o catkin_make
+    para construir os pacotes do neato
+
+    Para baixar direto o arquivo sem precisar clonar o repositório, acesse:
+    https://raw.githubusercontent.com/mirwox/robotica16/master/config/checkandfork.py
+
+"""
+
 
 def main():
     user = raw_input("Por favor digite seu username do Github:")
