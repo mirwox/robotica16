@@ -50,7 +50,7 @@ def main():
         Iniciando clonagem do repositório.
     """)
 
-    status = os.system("git clone urlrobotica")
+    status = os.system("git clone {0}".format(urlrobotica))
     status = os.system("cd robotica16")
     print("Configurando o repositorio do curso como upstream")
     status = os.system("git remote add upstream https://github.com/mirwox/robotica16")
