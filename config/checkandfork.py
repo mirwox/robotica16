@@ -52,6 +52,7 @@ def main():
 
     status = os.system("git clone {0}".format(urlrobotica))
     status = os.system("cd robotica16")
+    print(status)
     print("Configurando o repositorio do curso como upstream")
     status = os.system("git remote add upstream https://github.com/mirwox/robotica16")
     status = os.system("cd ../..")
