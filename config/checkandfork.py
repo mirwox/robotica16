@@ -20,6 +20,9 @@ def main():
     user = raw_input("Por favor digite seu username do Github:")
     user = user.strip()
 
+    email = raw_input("Por favor digite o e-mail de sua conta do Github")
+    email = email.strip()
+
     urlgit = "https://github.com/{0}".format(user)
 
     print("Checando usuário {0} no endereço {1}".format(user, urlgit))
@@ -56,6 +59,10 @@ def main():
     print("Configurando o repositorio do curso como upstream")
     status = os.system("git remote add upstream https://github.com/mirwox/robotica16")
     os.chdir("../..")
+
+    os.system('git config --global user.email "{0}"''.format(email))
+
+
     print("Para atualizar com o repositório do curso, lembre-se de fazer:\n git fetch upstream")
     status = os.system("catkin_make")
 
