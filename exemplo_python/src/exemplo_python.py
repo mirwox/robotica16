@@ -15,13 +15,17 @@ def notificacao(data):
 
         Esta leitura chega na variavel data e e'  um objeto do tipo odometria
     """
-
+    # Todo: a partir de uma leitura da odometria faça
+    # um publish na velocidade até que o robô tenha andado 2 metros
     pass
 
 
 
 
-controle():
+def controle():
+    """
+        Função inicial do programa
+    """
     rospy.Subscriber('/odom', Odometry, notificacao).
     # Initial movement.
     pub.publish(velocidade_objetivo)
