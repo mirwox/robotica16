@@ -9,7 +9,7 @@ w = 10  # Velocidade angular
 
 if __name__ == "__main__":
     rospy.init_node("roda.py")
-    pub = rospy.Publisher("cmd_vel", Twist)
+    pub = rospy.Publisher("cmd_vel", Twist, queue_size=3)
 
     try:
         while not rospy.is_shutdown():
