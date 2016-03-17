@@ -4,17 +4,17 @@
 import rospy
 from geometry_msgs.msg import Twist, Vector3
 
-v = 5   # Velocidade angular
-w = 10  # Velocidade linear
+v = 5   # Velocidade linear
+w = 10  # Velocidade angular
 
 if __name__ == "__main__":
     rospy.init_node("roda.py")
-    vel = Twist(Vector3(v,0,0), Vector3(0,0,w))
     pub = rospy.Publisher("cmd_vel", Twist)
 
     try:
         while not rospy.is_shutdown():
+            vel = Twist(Vector3(v,0,0), Vector3(0,0,w))
             pub.publish(vel)
             rospy.sleep(1.0)
-    except rospy.ROSInterruptedException:
+    except rospy.ROSInterruptException:
         print("Ocorreu uma exceção com o rospy")
