@@ -4,8 +4,8 @@
 import rospy
 from geometry_msgs.msg import Twist, Vector3
 
-v = 5   # Velocidade linear
-w = 10  # Velocidade angular
+v = 1  # Velocidade linear
+w = 0.5  # Velocidade angular
 
 if __name__ == "__main__":
     rospy.init_node("roda.py")
