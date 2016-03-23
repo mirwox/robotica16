@@ -53,6 +53,8 @@ def main():
         Iniciando clonagem do repositório.
     """)
 
+
+    os.chdir("catkin_ws/src")
     status = os.system("git clone {0}".format(urlrobotica))
     os.chdir("robotica16")
     print(status)
