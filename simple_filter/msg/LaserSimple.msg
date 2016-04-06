@@ -1,0 +1,4 @@
+float64 north_laser
+float64 south_laser
+float64 east_laser
+float64 west_laser
