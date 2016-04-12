@@ -232,5 +232,6 @@ class Particle(object):
         self.weight /= Z
 
 if __name__ == '__main__':
+    print("Exemplo de linha de comando: \n rosrun  simple_filter simple_particle_filter.py _walls:=[0.0,3.0] _nparticles:=100 _realrobot:=False")
     node = SimpleParticleFilter()
     node.run()
