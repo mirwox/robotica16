@@ -2,6 +2,10 @@
 
 """ A very simple simulator for a robot in 1d with forward
     and rear facing range sensor """
+""" Simulador muito simples para um robo em 1d com sensores 
+    de distancia em frente e atras"""
+
+
 
 import rospy
 from numpy.random import randn
