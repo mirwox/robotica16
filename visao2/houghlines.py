@@ -30,13 +30,14 @@ if __name__ == '__main__':
     cdst = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR) # Converte a imagem para BGR para permitir desenho colorido
 
     if True: # HoughLinesP
-        lines = cv2.HoughLinesP(dst, 1, math.pi/180.0, 40, np.array([]), 50, 10)
+        lines = cv2.HoughLinesP(dst, 1, math.pi/180.0, 15, np.array([]), 5, 5)
         print("Used Probabilistic Rough Transform")
         print("The probabilistic hough transform returns the end points of the detected lines")
         a,b,c = lines.shape
-        for i in range(a):
+        print("Valor de A",a, "valor de lines.shape", lines.shape)
+        for i in range(b):
             # Faz uma linha ligando o ponto inicial ao ponto final, com a cor vermelha (BGR)
-            cv2.line(cdst, (lines[i][0][0], lines[i][0][1]), (lines[i][0][2], lines[i][0][3]), (0, 0, 255), 3, cv2.CV_AA)
+            cv2.line(cdst, (lines[0][i][0], lines[0][i][1]), (lines[0][i][2], lines[0][i][3]), (0, 0, 255), 3, cv2.CV_AA)
 
     else:    # HoughLines
         # Esperemos nao cair neste caso
