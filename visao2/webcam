@@ -1,0 +1,16 @@
+import cv2
+from matplotlib import pyplot as plt
+import time
+
+webcam = cv2.VideoCapture(1)
+while True:
+    val, image = webcam.read()
+    image2 = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    cv2.imshow("test", image2)
+    key = cv2.waitKey(20)
+
+    if key in [27, ord('Q'), ord('q')]: # exit on ESC
+        break
+
+webcam.release()

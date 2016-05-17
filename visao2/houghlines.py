@@ -36,7 +36,7 @@ if __name__ == '__main__':
         a,b,c = lines.shape
         for i in range(a):
             # Faz uma linha ligando o ponto inicial ao ponto final, com a cor vermelha (BGR)
-            cv2.line(cdst, (lines[i][0][0], lines[i][0][1]), (lines[i][0][2], lines[i][0][3]), (0, 0, 255), 3, cv2.CV_AA)
+            cv2.line(cdst, (lines[i][0][0], lines[i][0][1]), (lines[i][0][2], lines[i][0][3]), (0, 0, 255), 3)
 
     else:    # HoughLines
         # Esperemos nao cair neste caso

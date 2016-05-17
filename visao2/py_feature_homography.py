@@ -2,6 +2,8 @@
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
+import time as t
+
 
 # Adaptado da documentacao em http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_feature_homography/py_feature_homography.html
 # Com a funcao drawMatches do usuario
@@ -80,72 +82,83 @@ def drawMatches(img1, kp1, img2, kp2, matches):
 
     # Show the image
     cv2.imshow('Matched Features', out)
-    cv2.waitKey(0)
-    cv2.destroyWindow('Matched Features')
+    cv2.waitKey(1)
+    #cv2.destroyWindow('Matched Features')
 
     # Also return the image if you'd like a copy
     return out
 
 
-MIN_MATCH_COUNT = 10
 
-img1 = cv2.imread('box.png',0)          # Imagem a procurar
-img2 = cv2.imread('box_in_scene.png',0) # Imagem do cenario - puxe do video para fazer isto
-
-print(img2)
-
-# Initiate SIFT detector
-sift = cv2.SIFT()
-
-# find the keypoints and descriptors with SIFT in each image
-kp1, des1 = sift.detectAndCompute(img1,None)
-kp2, des2 = sift.detectAndCompute(img2,None)
-
-FLANN_INDEX_KDTREE = 0
-index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-search_params = dict(checks = 50)
-
-# Configura o algoritmo de casamento de features
-flann = cv2.FlannBasedMatcher(index_params, search_params)
-
-# Tenta fazer a melhor comparacao usando o algoritmo
-matches = flann.knnMatch(des1,des2,k=2)
-
-# store all the good matches as per Lowe's ratio test.
-good = []
-for m,n in matches:
-    if m.distance < 0.7*n.distance:
-        good.append(m)
+img0 = cv2.imread('box.png',0)
+webcam = cv2.VideoCapture(1)
 
 
-if len(good)>MIN_MATCH_COUNT:
-    # Separa os bons matches na origem e no destino
-    src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
-    dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
+while True:
+    rval, frame = webcam.read()
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
-    # Tenta achar uma trasformacao composta de rotacao, translacao e escala que situe uma imagem na outra
-    M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
-    matchesMask = mask.ravel().tolist()
+    MIN_MATCH_COUNT = 10
 
-    h,w = img1.shape
-    pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 
-    # Transforma os pontos da imagem origem para onde estao na imagem destino
-    dst = cv2.perspectiveTransform(pts,M)
+    img1 = cv2.imread('download.png',0)          # Imagem a procurar
+    print img1.shape
+    img2 = frame # Imagem do cenario - puxe do video para fazer isto
 
-    # Desenha as linhas
-    img2b = cv2.polylines(img2,[np.int32(dst)],True,255,3, cv2.CV_AA)
+    # Initiate SIFT detector
+    sift = cv2.SIFT()
 
-else:
-    print "Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
-    matchesMask = None
+    # find the keypoints and descriptors with SIFT in each image
+    kp1, des1 = sift.detectAndCompute(img1,None)
+    kp2, des2 = sift.detectAndCompute(img2,None)
 
-draw_params = dict(matchColor = (0,255,0), # draw matches in green color
-                   singlePointColor = None,
-                   matchesMask = matchesMask, # draw only inliers
-                   flags = 2)
+    FLANN_INDEX_KDTREE = 0
+    index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+    search_params = dict(checks = 50)
 
-img3 = drawMatches(img1,kp1,img2,kp2,good[:20])
+    # Configura o algoritmo de casamento de features
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
 
-plt.imshow(img3, 'gray'),plt.show()
+    # Tenta fazer a melhor comparacao usando o algoritmo
+    matches = flann.knnMatch(des1,des2,k=2)
+
+    # store all the good matches as per Lowe's ratio test.
+    good = []
+    for m,n in matches:
+        if m.distance < 0.7*n.distance:
+            good.append(m)
+
+
+    if len(good)>MIN_MATCH_COUNT:
+        # Separa os bons matches na origem e no destino
+        src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
+        dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
+
+
+        # Tenta achar uma trasformacao composta de rotacao, translacao e escala que situe uma imagem na outra
+        M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
+        matchesMask = mask.ravel().tolist()
+
+        h,w = img1.shape
+        pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
+
+        # Transforma os pontos da imagem origem para onde estao na imagem destino
+        dst = cv2.perspectiveTransform(pts,M)
+
+        # Desenha as linhas
+        img2b = cv2.polylines(img2,[np.int32(dst)],True,255,3, cv2.CV_AA)
+
+    else:
+        print "Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
+        matchesMask = None
+
+    draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+                       singlePointColor = None,
+                       matchesMask = matchesMask, # draw only inliers
+                       flags = 2)
+
+    img3 = drawMatches(img1,kp1,img2,kp2,good[:20])
+
+
+webcam.release()
