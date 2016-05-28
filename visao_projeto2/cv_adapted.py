@@ -108,8 +108,8 @@ def my_calibration(sz):
     K[1,2] = 0.5*row
     return K
 
-img0_name = "book_frontal.JPG"
-img1_name = "book_perspective.JPG"
+img0_name = "montgomery_800_600.jpg"
+img1_name = "montgomery_floor_800_600.jpg"
 
 
 img0 = cv2.imread(img0_name)
