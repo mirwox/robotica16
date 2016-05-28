@@ -108,20 +108,20 @@ def my_calibration(sz):
     K[1,2] = 0.5*row
     return K
 
-img1_name = "book_frontal.JPG"
-img2_name = "book_perspective.JPG"
+img0_name = "book_frontal.JPG"
+img1_name = "book_perspective.JPG"
 
 
-img1 = cv2.imread(img1_name)
-print("Input cv image", img1.shape)
-img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+img0 = cv2.imread(img0_name)
+print("Input cv image", img0.shape)
+img0 = cv2.cvtColor(img0, cv2.COLOR_BGR2GRAY)
 
 
 cv_sift = cv2.SIFT()
 
 
-img0 = cv2.imread(img2_name)
-img0 = cv2.cvtColor(img0, cv2.COLOR_BGR2GRAY)
+img1 = cv2.imread(img1_name)
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
 
 kp0, desc0 = cv_sift.detectAndCompute(img0, None)
 kp1, desc1 = cv_sift.detectAndCompute(img1, None)
@@ -161,8 +161,8 @@ box_cam2 = cam2.project(homography.make_homog(box))
 
 
 # plotting
-im0 = array(Image.open(img1_name))
-im1 = array(Image.open(img2_name))
+im0 = array(Image.open(img0_name))
+im1 = array(Image.open(img1_name))
 
 figure()
 imshow(im0)
