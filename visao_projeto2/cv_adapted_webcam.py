@@ -13,8 +13,7 @@ import cv2
 
 
 # If you have PCV installed, these imports should work
-import homography, camera, sift
-
+import camera, sift, homography
 
 
 # Stuff for sift
@@ -59,7 +58,79 @@ def find_homography(kp1, des1, kp2, des2):
         # Caso em que nao houve matches o suficiente
         return -1
 
+def mat2euler(matrix3d, cy_thresh=None):
+    """ Source: https://afni.nimh.nih.gov/pub/dist/bin/linux_fedora_21_64/meica.libs/nibabel/eulerangles.py
+        Given a rotation matrix, finds Euler angles
+    Discover Euler angle vector from 3x3 matrix
 
+    Uses the conventions above.
+
+    Parameters
+    ----------
+    M : array-like, shape (3,3)
+    cy_thresh : None or scalar, optional
+       threshold below which to give up on straightforward arctan for
+       estimating x rotation.  If None (default), estimate from
+       precision of input.
+
+    Returns
+    -------
+    z : scalar
+    y : scalar
+    x : scalar
+       Rotations in radians around z, y, x axes, respectively
+
+    Notes
+    -----
+    If there was no numerical error, the routine could be derived using
+    Sympy expression for z then y then x rotation matrix, which is::
+
+      [                       cos(y)*cos(z),                       -cos(y)*sin(z),         sin(y)],
+      [cos(x)*sin(z) + cos(z)*sin(x)*sin(y), cos(x)*cos(z) - sin(x)*sin(y)*sin(z), -cos(y)*sin(x)],
+      [sin(x)*sin(z) - cos(x)*cos(z)*sin(y), cos(z)*sin(x) + cos(x)*sin(y)*sin(z),  cos(x)*cos(y)]
+
+    with the obvious derivations for z, y, and x
+
+       z = atan2(-r12, r11)
+       y = asin(r13)
+       x = atan2(-r23, r33)
+
+    Problems arise when cos(y) is close to zero, because both of::
+
+       z = atan2(cos(y)*sin(z), cos(y)*cos(z))
+       x = atan2(cos(y)*sin(x), cos(x)*cos(y))
+
+    will be close to atan2(0, 0), and highly unstable.
+
+    The ``cy`` fix for numerical instability below is from: *Graphics
+    Gems IV*, Paul Heckbert (editor), Academic Press, 1994, ISBN:
+    0123361559.  Specifically it comes from EulerAngles.c by Ken
+    Shoemake, and deals with the case where cos(y) is close to zero:
+
+    See: http://www.graphicsgems.org/
+
+    The code appears to be licensed (from the website) as "can be used
+    without restrictions".
+    """
+    M = np.asarray(matrix3d)
+    if cy_thresh is None:
+        try:
+            cy_thresh = np.finfo(M.dtype).eps * 4
+        except ValueError:
+            cy_thresh = _FLOAT_EPS_4
+    r11, r12, r13, r21, r22, r23, r31, r32, r33 = M.flat
+    # cy: sqrt((cos(y)*cos(z))**2 + (cos(x)*cos(y))**2)
+    cy = math.sqrt(r33*r33 + r23*r23)
+    if cy > cy_thresh: # cos(y) not close to zero, standard form
+        z = math.atan2(-r12,  r11) # atan2(cos(y)*sin(z), cos(y)*cos(z))
+        y = math.atan2(r13,  cy) # atan2(sin(y), cy)
+        x = math.atan2(-r23, r33) # atan2(cos(y)*sin(x), cos(x)*cos(y))
+    else: # cos(y) (close to) zero, so x -> 0.0 (see above)
+        # so r21 -> sin(z), r22 -> cos(z) and
+        z = math.atan2(r21,  r22)
+        y = math.atan2(r13,  cy) # atan2(sin(y), cy)
+        x = 0.0
+    return z, y, x
 
 """
 This is the augmented reality and pose estimation cube example from Section 4.3.
@@ -172,33 +243,37 @@ while(True):
     # project with the second camera
     box_cam2 = cam2.project(homography.make_homog(box))
 
+    points2d = []
 
+    try:
+        # Creates a list of x-y pairs for the points to be drawn on the screen
+        points2d = zip([int(x) for x in box_cam2[0,:]], [int(y) for y in box_cam2[1,:]])
+    except ValueError:
+        print("NaN found in projected points")
+        continue
 
-
-
-    #plot(box_cam1[0,:],box_cam1[1,:],linewidth=3)
-    #title('2D projection of bottom square')
-    #axis('off')
-
-    #figure()
-    #imshow(im1)
-    #plot(box_trans[0,:],box_trans[1,:],linewidth=3)
-    #title('2D projection transfered with H')
-    #axis('off')
-
-    # Creates a list of x-y pairs for the points to be drawn on the screen
-    points2d = zip([int(x) for x in box_cam2[0,:]], [int(y) for y in box_cam2[1,:]])
-
-
-    #print("points2d", points2d)
+    #Draws the cube on top of the image
     first = points2d[0]
     for p in points2d[1:]:
         cv2.line(img1bgr, first, p, (0,0,255), 3, cv2.CV_AA)
         first = p
 
 
-    cv2.imshow('OpenCV output', img1bgr)
+    # Extract camera, rotation and translation matrices
+    Km, Rm, Tm = cam2.factor()
+    print("Camera")
+    print(Km)
+
+    #print("Rotation")
+    #print(Rm)
+    phi, theta, psi = mat2euler(Rm)
+    print("Rotation: {0:.2f} , {1:.2f}, {2:.2f}".format(math.degrees(phi), math.degrees(theta), math.degrees(psi)))
+
+    print("Translation")
+    print(Tm)
+
+    cv2.imshow('Aperte Q', img1bgr)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-cv2.destroyWindow('OpenCV output')
+cv2.destroyWindow('Aperte Q')
