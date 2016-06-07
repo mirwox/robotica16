@@ -269,7 +269,7 @@ while(True):
     phi, theta, psi = mat2euler(Rm)
     print("Rotation: {0:.2f} , {1:.2f}, {2:.2f}".format(math.degrees(phi), math.degrees(theta), math.degrees(psi)))
 
-    print("Translation")
+    print("Translation: {0:.2f} , {1:.2f}, {2:.2f}".format(Tm))
     print(Tm)
 
     cv2.imshow('Aperte Q', img1bgr)
