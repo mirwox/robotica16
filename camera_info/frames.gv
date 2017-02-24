@@ -1,0 +1,13 @@
+digraph G {
+"mav" -> "camera1"[label="Broadcaster: /mav_to_camera\nAverage rate: 98.845 Hz\nMost recent transform: 1477937517.451 ( -0.009 sec old)\nBuffer length: 4.937 sec\n"];
+"base_link" -> "base_laser_link"[label="Broadcaster: /laser_to_base\nAverage rate: 20.152 Hz\nMost recent transform: 1477937517.469 ( -0.027 sec old)\nBuffer length: 4.913 sec\n"];
+"base_link" -> "camera"[label="Broadcaster: /base_camera\nAverage rate: 10.194 Hz\nMost recent transform: 1477937517.487 ( -0.045 sec old)\nBuffer length: 4.807 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1477937517.442"[ shape=plaintext ] ;
+ }->"mav";
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1477937517.442"[ shape=plaintext ] ;
+ }->"base_link";
+}
