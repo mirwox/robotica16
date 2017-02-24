@@ -17,6 +17,16 @@ import os
 
 
 def main():
+
+    print("Este script configura seu mirror do repositório robotica16, que contem alguns exemplos de aula")
+
+    print("E software do Neatos e do ARTag")
+
+    print("Continuamos a usa-lo em 2017, não se preocupe com o nome do repositório")
+
+    print("Infelizmente o Github vai pedir sua senha duas vezes\n\n")
+
+
     user = raw_input("Por favor digite seu username do Github: ")
     user = user.strip()
 
@@ -53,6 +63,7 @@ def main():
         Iniciando clonagem do repositório.
     """)
 
+    os.chdir(os.path.expanduser('~'))
 
     os.chdir("catkin_ws/src")
     status = os.system("git clone {0}".format(urlrobotica))
@@ -72,6 +83,9 @@ def main():
 
 
     print("Para atualizar com o repositório do curso, lembre-se de fazer:\n git fetch upstream")
+
+    print("Compilando pacotes com catkin_make")
+
     status = os.system("catkin_make")
 
 

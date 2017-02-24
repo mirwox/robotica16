@@ -220,7 +220,7 @@ while(True):
 
     # Note: always resize image to 747 x 1000 or change the K below
     # camera calibration
-    K = my_calibration((747,1000))
+    K = my_calibration((800,600))
 
     # 3D points at plane z=0 with sides of length 0.2
     box = cube_points([0,0,0.1],0.1)
@@ -269,8 +269,9 @@ while(True):
     phi, theta, psi = mat2euler(Rm)
     print("Rotation: {0:.2f} , {1:.2f}, {2:.2f}".format(math.degrees(phi), math.degrees(theta), math.degrees(psi)))
 
-    print("Translation: {0:.2f} , {1:.2f}, {2:.2f}".format(Tm))
-    print(Tm)
+    print("Translation: ",Tm)
+
+
 
     cv2.imshow('Aperte Q', img1bgr)
     if cv2.waitKey(1) & 0xFF == ord('q'):

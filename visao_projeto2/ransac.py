@@ -34,7 +34,7 @@ import scipy.linalg # use numpy if scipy unavailable
 
 def ransac(data,model,n,k,t,d,debug=False,return_all=False):
     """fit model parameters to data using the RANSAC algorithm
-    
+
 This implementation written from pseudocode found at
 http://en.wikipedia.org/w/index.php?title=RANSAC&oldid=116358182
 
@@ -80,6 +80,14 @@ return bestfit
     best_inlier_idxs = None
     while iterations < k:
         maybe_idxs, test_idxs = random_partition(n,data.shape[0])
+        #print("data", data.shape)
+        #print("maybe_ids", maybe_idxs)
+        if 0 in data.shape:
+            #print("Dimension 0 found in data, continue")
+            iterations+=1
+            continue
+        else:
+            print("_______ FOUND")
         maybeinliers = data[maybe_idxs,:]
         test_points = data[test_idxs]
         maybemodel = model.fit(maybeinliers)
@@ -122,7 +130,7 @@ class LinearLeastSquaresModel:
 
     This class serves as an example that fulfills the model interface
     needed by the ransac() function.
-    
+
     """
     def __init__(self,input_columns,output_columns,debug=False):
         self.input_columns = input_columns
@@ -139,7 +147,7 @@ class LinearLeastSquaresModel:
         B_fit = scipy.dot(A,model)
         err_per_point = numpy.sum((B-B_fit)**2,axis=1) # sum squared error per row
         return err_per_point
-        
+
 def test():
     # generate perfect input data
 
@@ -172,7 +180,7 @@ def test():
     output_columns = [n_inputs+i for i in range(n_outputs)] # the last columns of the array
     debug = True
     model = LinearLeastSquaresModel(input_columns,output_columns,debug=debug)
-    
+
     linear_fit,resids,rank,s = numpy.linalg.lstsq(all_data[:,input_columns],all_data[:,output_columns])
 
     # run RANSAC algorithm
@@ -205,4 +213,3 @@ def test():
 
 if __name__=='__main__':
     test()
-    

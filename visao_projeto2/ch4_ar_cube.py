@@ -11,8 +11,7 @@ from PIL import Image
 
 # If you have PCV installed, these imports should work
 from PCV.geometry import homography, camera
-from PCV.localdescriptors import sift
-
+import sift
 """
 This is the augmented reality and pose estimation cube example from Section 4.3.
 """
@@ -68,6 +67,8 @@ l0,d0 = sift.read_features_from_file('im0.sift')
 
 sift.process_image('./data/book_perspective.JPG','im1.sift')
 l1,d1 = sift.read_features_from_file('im1.sift')
+
+
 
 
 # match features and estimate homography
