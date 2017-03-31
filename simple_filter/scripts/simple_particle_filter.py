@@ -239,6 +239,10 @@ if __name__ == '__main__':
         """Exemplo de linha de comando
 Rode cada comando em um terminal
 rosrun simple_filter simple_filter_world.py _walls:=[0.0,3.0]
-rosrun  simple_filter simple_particle_filter.py _walls:=[0.0,3.0] _nparticles:=100 _realrobot:=False""")
+rosrun  simple_filter simple_particle_filter.py _walls:=[0.0,3.0] _nparticles:=100 _realrobot:=False
+rosrun simple_filter simple_controller.py
+Selecione a janela do Simple_Controller e atualize a posicao com as setas direcionais
+
+""")
     node = SimpleParticleFilter()
     node.run()
